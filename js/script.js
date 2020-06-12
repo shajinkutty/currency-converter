@@ -16,11 +16,11 @@ currencyElementTo.addEventListener('change', fetchData);
 inputElementFrom.addEventListener('input', calculate);
 inputElementTo.addEventListener('input', calculate);
 
-let loading = true;
 let latestRateList;
 
 // Fetch currency list from API
 function getCurrencyList() {
+  showLoading(true);
   fetch('https://currencyscoop.p.rapidapi.com/currencies', {
     method: 'GET',
     headers: {
@@ -32,6 +32,7 @@ function getCurrencyList() {
       return response.json();
     })
     .then((data) => {
+      showLoading(false);
       currencyOptions(data.response.fiats);
     })
     .catch((err) => {
@@ -57,12 +58,14 @@ const currencyOptions = (res) => {
     .map((c) => {
       return `<option value="${c.currency_code}">${c.currency_name}</option>`;
     });
-  currencyElementFrom.innerHTML = options;
-  currencyElementTo.innerHTML = options;
+  currencyElementFrom.innerHTML =
+    '<option disabled selected>Please select</option>' + options;
+  currencyElementTo.innerHTML =
+    '<option disabled selected>Please select</option>' + options;
 };
 
 function fetchData() {
-  loading = true;
+  showLoading(true);
   // Fetching data
   fetch('https://currencyscoop.p.rapidapi.com/latest', {
     method: 'GET',
@@ -75,7 +78,7 @@ function fetchData() {
       return response.json();
     })
     .then((data) => {
-      loading = false;
+      showLoading(false);
       latestRateList = data.response;
       calculate();
     })
@@ -117,4 +120,14 @@ swapEl.addEventListener('click', () => {
   currencyElementTo.value = temp;
   calculate();
 });
+
+function showLoading(bool) {
+  const loader = document.querySelector('.loader');
+  if (bool) {
+    loader.classList.add('show');
+  } else {
+    loader.classList.remove('show');
+  }
+}
+
 getCurrencyList();
