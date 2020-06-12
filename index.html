@@ -4,6 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+	<link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500&display=swap"
+      rel="stylesheet"
+    />
+	<link rel="stylesheet" href="./css/style.css" />
   </head>
-  <body></body>
+  <body>
+	<div class="container">
+      <div class="content-card">
+        <h1 class="title">Currency Converter</h1>
+        <div class="currency">
+          <select name="" id="currency-from">
+            <option value="AED">AED</option>
+          </select>
+          <input type="number" id="amount-from" placeholder="0" value="1" />
+        </div>
+        <div class="swap-rate-container">
+          <button id="swap" class="btn">Swap</button>
+          <div class="rate" id="rate"></div>
+        </div>
+        <div class="currency">
+          <select name="" id="currency-to">
+            <option value="AED">AED</option>
+          </select>
+          <input type="number" id="amount-to" placeholder="0" value="1" />
+        </div>
+        <div class="convert-rate">
+          1 SAR = 20.19 INR
+        </div>
+      </div>
+    </div>
+	<script src="./js/script.js" defer></script>
+  </body>
 </html>
