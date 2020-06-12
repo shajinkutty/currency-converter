@@ -41,15 +41,24 @@ function getCurrencyList() {
 
 // Output currency list to the DOM
 const currencyOptions = (res) => {
-  let output = '<option value="" disabled selected>Please select</option>';
+  const listArray = [];
   for (const key in res) {
     if (res.hasOwnProperty(key)) {
-      const element = res[key];
-      output += `<option value="${element.currency_code}">${element.currency_name}</option>`;
+      listArray.push(res[key]);
     }
   }
-  currencyElementFrom.innerHTML = output;
-  currencyElementTo.innerHTML = output;
+  const options = listArray
+    .sort((a, b) => {
+      return a.currency_name < b.currency_name ? -1 : 0;
+    })
+    .filter((f) => {
+      return f.currency_name != 'ADB Unit of Account';
+    })
+    .map((c) => {
+      return `<option value="${c.currency_code}">${c.currency_name}</option>`;
+    });
+  currencyElementFrom.innerHTML = options;
+  currencyElementTo.innerHTML = options;
 };
 
 function fetchData() {
@@ -85,18 +94,20 @@ function calculate() {
 
   const fromCurrencyRate = rates[currencyFrom];
   const dollerRate = 1 / fromCurrencyRate; // calculate selected currency to USD
-  const toCurrencyRate = currencyTo ? rates[currencyTo] : 1;
+  const toCurrencyRate = rates[currencyTo];
   const convertedRate = toCurrencyRate * dollerRate;
+
+  if (!toCurrencyRate) {
+    return;
+  }
 
   if (inputValue < 0) {
     return;
   }
-  inputElementTo.value = currencyTo
-    ? (inputValue * convertedRate).toFixed(2)
-    : 1;
-  convertRate.innerText = currencyTo
-    ? `1 ${currencyFrom} = ${convertedRate.toFixed(2)} ${currencyTo}`
-    : '';
+  inputElementTo.value = (inputValue * convertedRate).toFixed(2);
+  convertRate.innerText = `1 ${currencyFrom} = ${convertedRate.toFixed(
+    2
+  )} ${currencyTo}`;
 }
 
 // swap function
